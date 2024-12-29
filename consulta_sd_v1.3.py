@@ -9,10 +9,6 @@ import streamlit as st
 
 
 st.title("📄 Reporte Solicitudes Neomante")
-st.write(
-    "Subtitulo"
-)
-
 uploaded_file = st.file_uploader("Sube tu reporte de Neomante (.xlsx)", type=("xlsx"))
 
 
