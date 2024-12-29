@@ -175,7 +175,7 @@ with open("salidas_sd_"+nom+".xlsx", "rb") as xlsx:
     btn = st.download_button(
         label="Descargar XLSX",
         data=xlsx,
-        file_name="salidas_sd_"+nom+".xlsx",
+        file_name="reporte_neomante_daop.xlsx",
         mime="image/png",
     
     )
