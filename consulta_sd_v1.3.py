@@ -177,7 +177,7 @@ libro.save(r"salidas_sd_"+nom+".xlsx")
 
 with open("salidas_sd_"+nom+".xlsx", "rb") as xlsx:
     btn = st.download_button(
-        label="Download XLSX",
+        label="Descargar XLSX",
         data=xlsx,
         file_name="salidas_sd_"+nom+".xlsx",
         mime="image/png",
