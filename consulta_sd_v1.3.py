@@ -5,19 +5,27 @@ import os
 from openpyxl.styles import Alignment, Font
 from openpyxl.cell import Cell
 
-path="C:\\Users\\luis.lizana\\Downloads\\"
-dir_sd=os.listdir(path)
-list_sd=[archivo for archivo in dir_sd if archivo.startswith("Reporte_general_")]
-libro_sd=openpyxl.load_workbook(path+list_sd[0])
+import streamlit as st
+
+
+st.title("📄 Solicitudes")
+st.write(
+    "Subtitulo"
+)
+
+uploaded_file = st.file_uploader("Upload a document (.xlsx)", type=("xlsx"))
+
+
+libro_sd=openpyxl.load_workbook(uploaded_file)
 nom_hojas=libro_sd.sheetnames
 df_total=pd.DataFrame()
 df_aux=pd.DataFrame()
-df_ift_se=pd.read_excel("C:\\Users\\luis.lizana\\OneDrive - Coordinador Eléctrico Nacional\\Trabajo\\Documentos DAOP\\IFT\\reporte_subestaciones.xlsx", sheet_name="Subestaciones")
+df_ift_se=pd.read_excel("reporte_subestaciones.xlsx", sheet_name="Subestaciones")
 df_ift_se=df_ift_se[["Nombre", "Región","Comuna"]]
 df_ift_se=df_ift_se[["Nombre", "Región","Comuna"]]
 df_ift_se=df_ift_se.rename(columns={"Nombre":"SubEstación"})
 
-df_ift_lin=pd.read_excel("C:\\Users\\luis.lizana\\OneDrive - Coordinador Eléctrico Nacional\\Trabajo\\Documentos DAOP\\IFT\\reporte_lineas.xlsx", sheet_name="Lineas")
+df_ift_lin=pd.read_excel("reporte_lineas.xlsx", sheet_name="Lineas")
 df2=df_ift_lin["Nombre"]
 df2=df2.str.replace(" - ", "_")
 df2=df2.str.replace(" – ", "_")
@@ -29,7 +37,7 @@ df_ift_lin=pd.merge(df_ift_lin,df_ift_se, on="SubEstación")
 df_ift_lin=df_ift_lin.drop_duplicates()
 
 
-df_ift_gen=pd.read_excel("C:\\Users\\luis.lizana\\OneDrive - Coordinador Eléctrico Nacional\\Trabajo\\Documentos DAOP\\IFT\\reporte_generadores.xlsx", sheet_name="Generadores")
+df_ift_gen=pd.read_excel("reporte_generadores.xlsx", sheet_name="Generadores")
 df_ift_gen=df_ift_gen[["Nombre Central", "Subestación de inyección"]]
 df_ift_gen=df_ift_gen.rename(columns={"Subestación de inyección":"SubEstación", "Nombre Central":"Central"})
 df_ift_gen=pd.merge(df_ift_gen,df_ift_se, on="SubEstación")
@@ -40,7 +48,7 @@ dic_remp={"<p>":"","</p>":"\n","<li>":"\n","</li>":"","<ul>":"","</ul>":"","<str
 
 
 for i in nom_hojas:
-    df=pd.read_excel(path+list_sd[0], sheet_name=i)
+    df=pd.read_excel(uploaded_file, sheet_name=i)
     nom=df.loc[0][0][26:].replace(":","_")
     columns=df.loc[5]
     columns=columns.reset_index(drop=True)
@@ -85,9 +93,6 @@ df_total["Horas"]=pd.to_datetime(df_total["Fecha Fin"])-pd.to_datetime(df_total[
 df_total["Horas"]=df_total["Horas"].dt.total_seconds()/3600
 
 
-
-
-os.remove(path+list_sd[0])
 
 df_total.to_excel("salidas_sd_"+nom+".xlsx", index=False)
 
@@ -167,4 +172,18 @@ for row in sheet.iter_rows():
 
 
 libro.save(r"salidas_sd_"+nom+".xlsx")
+
+
+
+with open("salidas_sd_"+nom+".xlsx", "rb") as xlsx:
+    btn = st.download_button(
+        label="Download XLSX",
+        data=xlsx,
+        file_name="salidas_sd_"+nom+".xlsx",
+        mime="image/png",
+    
+    )
+
+os.remove("salidas_sd_"+nom+".xlsx")
+
 # %%
