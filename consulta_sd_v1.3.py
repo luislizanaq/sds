@@ -8,12 +8,12 @@ from openpyxl.cell import Cell
 import streamlit as st
 
 
-st.title("📄 Solicitudes")
+st.title("📄 Reporte Solicitudes Neomante")
 st.write(
     "Subtitulo"
 )
 
-uploaded_file = st.file_uploader("Upload a document (.xlsx)", type=("xlsx"))
+uploaded_file = st.file_uploader("Sube tu reporte de Neomante (.xlsx)", type=("xlsx"))
 
 
 libro_sd=openpyxl.load_workbook(uploaded_file)
